@@ -1,0 +1,5 @@
+﻿ID,Name,type,hurt,stability,lvlBuff,hitRate,description,giveActID,receiveActID
+1,电光石火,0,1000,50,1,1,威力50必定命中,1,8
+2,十万伏特,1,100,50,2,0.9,威力100命中90%,1,8
+3,摇尾巴骨,0,30,10,1,0.8,无,1,8
+4,雷电,1,200,100,5,0.5, 威力200命中50%,1,8
