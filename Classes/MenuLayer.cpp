@@ -1,4 +1,5 @@
 #include "MenuLayer.h"
+#include "Map.h"
 USING_NS_CC;
 
 
@@ -16,18 +17,26 @@ bool MenuLayer::init()
     if ( !CCLayer::init() )
         return false;
 
-	//³õÊ¼»¯
-	
-    CCSprite* pSprite = CCSprite::create("HelloWorld.png");
-	CCSize size = CCDirector::sharedDirector()->getWinSize();
-    pSprite->setPosition(ccp(size.width/2, size.height/2));
-    this->addChild(pSprite, 0);
+	sGlobal->load();
 
-	//CCScene* story=StoryWorld::scene();
-	//CCDirector::sharedDirector()->pushScene(story);//@
-	//CCDirector::sharedDirector()->replaceScene(story);
+	Map* map=Map::create(MAP11_PATH);
+	sGlobalRes::instance()->map=map;//@
+	WalkingMan* hero=WalkingMan::create();
+	sGlobalRes::instance()->hero=hero;//@
+	DiaWindow* diawindow=DiaWindow::create();
+	diawindow->setControllerListener(hero);
+	addChild(diawindow,5);
+	sGlobalRes::instance()->diawindow=diawindow;//@
+	eManager->load(0);
 
+	map->initNPC();
+	map->setGameStartPos();
 
+	map->setTag(MAP);
+	this->addChild(map);
+
+	eManager->happen(ccp(62,97),STAND_TRIG);
+	eManager->happen(ccp(62,97),A_TRIG);
 
 	//touch×¢²á
 	this->setTouchEnabled(true);
@@ -38,7 +47,6 @@ bool MenuLayer::init()
 
 bool MenuLayer::ccTouchBegan(CCTouch *pTouch,CCEvent *pEvent)
 {
-	//CCDirector::sharedDirector()->popScene();
 	return true;
 }
 

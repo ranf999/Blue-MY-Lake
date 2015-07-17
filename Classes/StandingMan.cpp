@@ -7,22 +7,15 @@ bool StandingMan::init()
 	return true;
 }
 
-StandingMan* StandingMan::create(int id)
+StandingMan* StandingMan::create(int picNo,int id)
 {
 	StandingMan* man=StandingMan::create();
+	man->picNo=picNo;
 	man->setID(id);
 	man->initSprite();
 	return man;
 }
 
-void StandingMan::initAnim(int dir)
-{
-}
-
-void StandingMan::goWalking(float dt)
-{
-	setFaceDirection(this->dir);
-}
 void StandingMan::respond(int direction)
 {
 	setFaceDirection(direction);
@@ -31,4 +24,12 @@ void StandingMan::respond(int direction)
 void StandingMan::endRespond()
 {
 	goWalking(0);
+}
+
+
+
+
+void StandingMan::goWalking(float dt)
+{
+	setFaceDirection(this->dir);
 }

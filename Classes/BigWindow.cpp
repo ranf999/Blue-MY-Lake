@@ -46,7 +46,7 @@ void BigWindow::initSprite()
 	content->setPosition(ccp(20,-500));
 }
 
-void BigWindow::load(Map* map,CCDictionary *properties)
+void BigWindow::load(CCTMXTiledMap* map,CCDictionary *properties)
 {
 	const CCString* title=properties->valueForKey("title");
 	const CCString* content=properties->valueForKey("content");
@@ -92,7 +92,7 @@ void BigWindow::disappear()
 	this->runAction(closeAct);
 }
 
-void BigWindow::respond(Map* map,CCDictionary *properties)
+void BigWindow::respond(CCTMXTiledMap* map,CCDictionary *properties)
 {
 	disappear();
 	endRespond();

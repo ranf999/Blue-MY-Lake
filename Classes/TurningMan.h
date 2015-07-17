@@ -1,6 +1,5 @@
 #include "cocos2d.h"
 #include "HumanEntity.h"
-#include "ControllerListener.h"
 using namespace cocos2d;
 
 #ifndef __TURNING_MAN_H__
@@ -9,15 +8,14 @@ class TurningMan: public HumanEntity
 {
 public:
 	CREATE_FUNC(TurningMan);
-	static TurningMan* create(int id);
-	bool init();
+	static TurningMan* create(int picNo,int id);
 	void respond(int dir);
 	void endRespond();
 private:
+	bool init();
 	void initAnim(int dir);
 	void goWalking(float dt);
 private:
 	CCFiniteTimeAction* forever;
 };
-//在setID中开始初始化过程
 #endif

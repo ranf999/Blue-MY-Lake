@@ -11,12 +11,12 @@ class PlacenameWindow:public Window
 public:
 	CREATE_FUNC(PlacenameWindow);
 	void initSprite();
-	void load(Map* map,CCDictionary *properties);
-	void respond(Map* map,CCDictionary *properties);
+	void load(CCTMXTiledMap* map,CCDictionary *properties);
+	void respond(int curPlaceID);
 	void appear();
 	void nextMove();
 	void disappear();
-private:
+public:
 	int prevPlaceID;
 };
 

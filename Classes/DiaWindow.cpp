@@ -36,12 +36,11 @@ void DiaWindow::initSprite()
 		dialogBox->getContentSize().height/2));
 }
 
-void DiaWindow::load(Map* map,CCDictionary *properties)
+void DiaWindow::load(CCArray* dialog)
 {
-	Window::load(map,properties);
-	nNext=0;
-	nStr=properties->valueForKey(NSTR_ATT)->intValue();
-	next=NULL;
+    this->dialog=dialog;
+    nNext=0;
+    nStr=dialog->count();
 }
 
 void DiaWindow::appear()
@@ -65,9 +64,7 @@ void DiaWindow::respond()
 		nNext++;
 		return;
 	}
-
-	std::string sCur;sCur+=(nNext+'0');
-	const CCString* str=properties->valueForKey(sCur);
+	CCString* str=(CCString*)dialog->objectAtIndex(nNext);
 	content->setString(str->getCString());
 	nNext++;
 }

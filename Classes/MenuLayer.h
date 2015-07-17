@@ -2,7 +2,6 @@
 #define __MenuLayer_H__
 
 #include "cocos2d.h"
-#include "Story.h"
 using namespace cocos2d;
 
 class MenuLayer : public cocos2d::CCLayer

@@ -3,7 +3,8 @@
 
 #include "GlobalPath.h"
 #include "cocos2d.h"
-//update:2014-9-29 13:23:33
+//last: 2014-9-29 13:23:33
+//update: 2014-11-17 18:08:39
 
 
 //layer的命名法是scene的首字母加layer名加LAYER
@@ -19,10 +20,7 @@
 #define HERO 510
 
 //Map的儿子
-#define TURNINGMAN_START 36 
-#define TURNINGMAN_END 45
-#define STANDINGMAN_START 46
-#define STANDINGMAN_END 55
+#define MAN_START 36 
 
 //ControlPanel的儿子
 #define RWINDOW 521
@@ -52,19 +50,35 @@
 #define FLOOR_MLYR "floor"
 #define WATER_MLYR "water"
 
-//游戏记录的属性名命名法是属性名加_RCD
+//游戏记录的属性名命名法是属性名加_(M/S)RCD
 #define FIRSTSAVE_RCD "FisrtSave"
-#define POSITIONX_RCD "PositionX"
-#define POSITIONY_RCD "PositionY"
-#define MAPPROCESS_RCD "MapProcess"
-#define PROCESS_RCD "Process"
+#define POSITIONX_MRCD "PositionX"
+#define POSITIONY_MRCD "PositionY"
+#define FACEDIR_MRCD "FaceDirection"
+#define MAPNO_MRCD "MapNo"
+#define STORYCNT_MRCD "StoryCnt"
+
+#define SPEED_SRCD "Speed"
+#define TELEPORT_SRCD "Teleport"
+#define STEALTH_SRCD "Stealth"
+#define SURF_SRCD "Surf"
+#define FLASH_SRCD "Flash"
+#define ALL_SUPERPOWER_SRCD "AllSuperPower"
 
 //游戏记录的初始值命名法是属性名加_INI
-#define FIRSTSAVE_INI false
+#define FIRSTSAVE_INI true
 #define POSITIONX_INI 63
 #define POSITIONY_INI 98
-#define MAPPROCESS_INI MAP11
-#define PROCESS_INI 0
+#define FACEDIR_INI 0
+#define MAPNO_INI MAP11
+#define STORYCNT_INI 0
+
+#define SPEED_INI 2.0
+#define TELEPORT_INI false
+#define STEALTH_INI false
+#define SURF_INI false
+#define FLASH_INI false
+#define ALL_SUPERPOWER_INI false
 
 //画面分辨率
 #define JX_RESOLUWID 1136
@@ -97,6 +111,8 @@
 #define CHANGESCENE_EVT "change scene"
 #define MAP11 19
 #define MAP12 20
+#define EVENT_MAP11 0
+#define EVENT_MAP12 1
 
 
 
@@ -141,7 +157,10 @@
 #define EGLVIEW 0.3
 #define ZOOMSTROKELEN 200
 
+
+#define NO_EVENT_FLAG -1
+
 typedef enum{kNone=1,kWall=17,kEvent=41}CollisionType;
-typedef enum{Down=0,Left=1,Right=2,Up=3}HeroDirection;
+typedef enum{Down=0,Left=1,Right=2,Up=3}FaceDirection;
 
 #endif /* __APPMACROS_H__ */

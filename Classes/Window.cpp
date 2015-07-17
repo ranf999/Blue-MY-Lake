@@ -1,4 +1,3 @@
-#include "AppMacros.h"
 #include "Window.h"
 
 //update:2014-10-1 16:32:15
@@ -19,7 +18,7 @@ void Window::respond()
 {
 }
 
-void Window::load(Map* map,CCDictionary *properties)
+void Window::load(CCTMXTiledMap* map,CCDictionary *properties)
 {
 	this->map=map;
 	this->properties=properties;

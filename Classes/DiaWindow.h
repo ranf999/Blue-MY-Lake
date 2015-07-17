@@ -2,7 +2,7 @@
 #define __DIA_WINDOW_H__
 #include "cocos2d.h"
 #include "Window.h"
-#include "HumanEntity.h"
+#include "Controller.h"
 using namespace cocos2d;
 
 //update:2014-9-26 17:34:44
@@ -13,7 +13,7 @@ public:
 	CREATE_FUNC(DiaWindow);
 	bool init();
 	void initSprite();
-	void load(Map* map,CCDictionary *properties);
+	void load(CCArray* dialog);
 	void respond();
 	void appear();
 	void disappear();
@@ -21,6 +21,7 @@ public:
 private:
 	int nStr;
 	int nNext;
+	CCArray* dialog;
 };
 
 #endif
