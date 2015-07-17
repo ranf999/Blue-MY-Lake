@@ -1,4 +1,6 @@
 #include "EventLoader.h"
+#include "TalkManEvent.h"
+#include "GetSuPEvent.h"
 
 CCArray* EventLoader::start(const char* sFilePath)
 {
@@ -15,23 +17,25 @@ CCArray* EventLoader::start(const char* sFilePath)
 		int type=strTmp->intValue();
 		switch(type)
 		{
-		    case TALKMAN_EVT:
-			event=TalkManEvent::create(); break;
-		    /*case ITEM_EVT:
-			event=ItemEvent::create(); break;
-		    case COMBAT_EVT:
-			event=CombatEvent::create(); break;
-		    case RESTORATION_EVT:
-			event=RestorationEvent::create(); break;
-		    case BLOODY_EVT:
-			event=BloodyEvent::create(); break;
-		    case SCENECH_EVT:
-			event=SceneChEvent::create(); break;
-		    case NIGHTFALL_EVT:
-			event=NightfallEvent::create(); break;
-		    case TIMEELAPSE:
-			event=TimeElapseEvent::create(); break;*/
-		    default:break;
+			case TALKMAN_EVT:
+				event=TalkManEvent::create(); break;
+			case GET_SUPOWER_EVT:
+				event=GetSuPEvent::create(); break;
+				/*case ITEM_EVT:
+				  event=ItemEvent::create(); break;
+				  case COMBAT_EVT:
+				  event=CombatEvent::create(); break;
+				  case RESTORATION_EVT:
+				  event=RestorationEvent::create(); break;
+				  case BLOODY_EVT:
+				  event=BloodyEvent::create(); break;
+				  case SCENECH_EVT:
+				  event=SceneChEvent::create(); break;
+				  case NIGHTFALL_EVT:
+				  event=NightfallEvent::create(); break;
+				  case TIMEELAPSE:
+				  event=TimeElapseEvent::create(); break;*/
+			default:break;
 		}
 		CCLog("%s",typeid(*event).name());
 

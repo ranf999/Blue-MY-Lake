@@ -9,12 +9,6 @@ using namespace cocos2d;
 //loads the Events in memory
 //executes the Events for Hero and ButtonA
 
-#define A_TRIG 0
-#define STAND_TRIG 1
-#define STAND_TRIG_IMGNO -10
-#define ATRIG_NO_MAN_IMGNO -1
-#define EVENT_CSV_PATH "csv/event%d.csv"
-
 class EventManager
 {
 public:
@@ -34,6 +28,7 @@ private:
     void loadAllEvents(int sTime);
     void loadEmap();
     void markHappened(Event* event);
+	bool isInstant(Event* event);
 };
 typedef Singleton<EventManager> sEventManager;
 #define eManager sEventManager::instance()

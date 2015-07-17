@@ -33,7 +33,14 @@ ControllerListener* EventManager::happen(CCPoint coord, int ent)
 	}
 
 	//event happen
-	event->happen();
+	Event* ptr=event;
+	do
+	{
+		ptr->happen();
+		ptr=findEventById(ptr->next);
+	}
+	while(ptr!=NO_EVENT_FLAG || isInstant(ptr));
+
 	onGoing=event;
 	if(!event->repeat)markHappened(event);
 	return listener(event->type);
@@ -111,3 +118,12 @@ void EventManager::loadEmap()
 	}
 } 
 
+bool EventManager::isInstant(Event* event)
+{
+	const int instants[]={ -100 };
+	const int nn=1;
+	for(int i=0;i<nn;i++)
+		if(event->type==instants[i])
+			return true;
+	return false;
+}
