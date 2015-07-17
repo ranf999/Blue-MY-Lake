@@ -8,7 +8,6 @@ bool TouchScreen::init()
 
 void TouchScreen::ccTouchesBegan(CCSet* pTouch, CCEvent *pEvent)
 {
-
 }
 
 void TouchScreen::ccTouchesEnded(CCSet* pTouch, CCEvent *pEvent)
@@ -38,7 +37,7 @@ void TouchScreen::teleportTo(CCSet* pTouch, CCEvent *pEvent)
 {
 	CCTouch* touch=(CCTouch*)pTouch->anyObject();
 	if((touch->getLocation()-touch->getStartLocation()).getLength()>ZOOMSTROKELEN)return;
-	if(doShrink||!hero->superPower->teleport)return;
+	if(doShrink||(!sGlobal->superPower->teleport&&!sGlobal->superPower->all))return;
 	if(buttonA->getBoundingBox().containsPoint(getTouchPos(pTouch)))return;
 	if(dirButton->getBoundingBox().containsPoint(getTouchPos(pTouch)))return;
 
@@ -67,6 +66,9 @@ void TouchScreen::teleportTo(CCSet* pTouch, CCEvent *pEvent)
 	hero->runAction(teleport);
 	hero->map->runAction(mapMove);
 	hero->map->getParent()->runAction(mapLayerMove);
+	sGlobal->mapState->positionX=hero->getHeroTilePos().x; 
+	sGlobal->mapState->positionY=hero->getHeroTilePos().y;
+	sGlobal->mapState->faceDir=hero->dir;
 }
 
 void TouchScreen::setPointers(Hero* hero,Button* buttonA, Button* dirButton)

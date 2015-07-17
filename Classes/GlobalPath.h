@@ -39,8 +39,13 @@
 #define BGNAME_IMG_PATH "img/story/bg_x00.jpg"
 #define BGNAME_PATH_LEN 13
 #define DUIHUAKUANG_IMG_PATH "img/story/Duihuakuang.png"
-
-
+#define PLIST_IMG_PATH "img/story/vdrawing.plist"
+#define VDRAWING_IMG_PATH "img/story/vdrawing.png"
+#define LANDSCAPE_IMG_PATH "img/story/Landscape.png"
+#define STAFFBG_IMG_PATH "img/story/staff_bg.png"
+#define STAFF_IMG_PATH "img/story/staff.png"
+#define BLACK_IMG_PATH "img/story/black.png"
+#define LEAFLET_IMG_PATH "img/story/leafletsclose.png"
 
 //new combat
 #define PLAYER_IMG_PATH "img/new combat/hero.png"

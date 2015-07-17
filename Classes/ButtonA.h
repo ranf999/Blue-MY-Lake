@@ -23,6 +23,7 @@ public:
 private:
 	void disableDirButton();
 	void enableDirButton();
+	void trigEvent();
 };
 
 #endif

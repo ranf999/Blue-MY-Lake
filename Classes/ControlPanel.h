@@ -7,9 +7,6 @@
 #include "ButtonA.h"
 #include "TouchScreen.h"
 #include "Menu.h"
-#include "PlacenameWindow.h"
-#include "DiaWindow.h"
-#include "BigWindow.h"
 using namespace cocos2d;
 
 //update£º2014-9-26 01:33:57

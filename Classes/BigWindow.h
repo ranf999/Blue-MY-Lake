@@ -14,8 +14,8 @@ public:
 	void appear();
 	void nextMove();
 	void disappear();
-	void load(Map* map,CCDictionary *properties);
-	void respond(Map* map,CCDictionary *properties);
+	void load(CCTMXTiledMap* map,CCDictionary *properties);
+	void respond(CCTMXTiledMap* map,CCDictionary *properties);
 };
 
 #endif

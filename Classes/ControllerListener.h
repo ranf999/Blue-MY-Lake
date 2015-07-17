@@ -12,9 +12,6 @@ public:
 	//对于长按操作对应touchEnd，对于单击操作对应结束动作如失去焦点
 	virtual void endRespond();
 	virtual bool hasTouchEnded();
-	void setNext(ControllerListener* next);
-public:
-	ControllerListener* next;
 };
 
 #endif

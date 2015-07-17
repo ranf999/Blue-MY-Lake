@@ -9,13 +9,11 @@ class StandingMan: public HumanEntity
 {
 public:
 	CREATE_FUNC(StandingMan);
-	static StandingMan* create(int id);
-	bool init();
+	static StandingMan* create(int picNo,int id);
 	void respond(int dir);
 	void endRespond();
 private:
-	void initAnim(int dir);
+	bool init();
 	void goWalking(float dt);
 };
-//在setFaceDir中开始初始化过程
 #endif

@@ -3,7 +3,7 @@
 
 #include "cocos2d.h"
 #include "AppMacros.h"
-#include "Map.h"
+#include "GlobalState.h"
 #include "ControlPanel.h"
 using namespace cocos2d;
 

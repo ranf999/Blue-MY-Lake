@@ -1,6 +1,7 @@
 #include "ControlPanel.h"
 
-//update£º2014-9-26 01:34:13
+//last: 2014-9-26 01:34:13
+//update£º2014-11-17 18:07:12
 
 bool ControlPanel::init()
 {
@@ -51,8 +52,9 @@ void ControlPanel::initControllerListeners()
 {
 	//´´½¨Ó¢ÐÛ
 	hero=Hero::create();
-	hero->setTiledMap(map);
 	hero->gotFocusT();
+	rGlobal->hero=hero;//@
+	hero->setFaceDirection(hero->dir);
 	hero->setPosition(
 		ccp(CCDirector::sharedDirector()->getWinSize().width/2,
 		CCDirector::sharedDirector()->getWinSize().height/2)-ccp(0,hero->map->getTileSize().height/2));
@@ -60,17 +62,15 @@ void ControlPanel::initControllerListeners()
 	PlacenameWindow* rwindow=PlacenameWindow::create();
 	rwindow->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width/2,
 		CCDirector::sharedDirector()->getWinSize().height/2));
-	this->addChild(rwindow,11);hero->setRWindow(rwindow);
-	
-	int mapNo = cocos2d::CCUserDefault::sharedUserDefault()->getIntegerForKey("MapProcess");
-	int process = cocos2d::CCUserDefault::sharedUserDefault()->getIntegerForKey("Process");
-	hero->storyCnt=process;hero->mapNo=mapNo;
+	rGlobal->rwindow=rwindow;
+	this->addChild(rwindow,11);
 
 	//bigwindow=BigWindow::create();
 	//this->setTag(BIGWINDOW);this->addChild(bigwindow,11);
 	bigwindow=NULL;
 
 	diawindow=DiaWindow::create();
+	rGlobal->diawindow=diawindow;
 	this->setTag(DIAWINDOW);this->addChild(diawindow,11);
 }
 

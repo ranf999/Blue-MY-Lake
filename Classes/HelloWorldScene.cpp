@@ -1,26 +1,27 @@
 #include "HelloWorldScene.h"
 USING_NS_CC;
 
-//last:20140924.2031
-//update:20140925.2257
+//last: 20140925.2257
+//update: 2014-11-17 18:07:38
+
 CCScene* HelloWorld::scene()
 {
-    CCScene *scene = CCScene::create();
-    HelloWorld *layer = HelloWorld::create();
+	CCScene *scene = CCScene::create();
+	HelloWorld *layer = HelloWorld::create();
 	layer->setTag(HELLOWORLDLAYER);
-    scene->addChild(layer);
-    return scene;
+	scene->addChild(layer);
+	return scene;
 }
 
 bool HelloWorld::init()
 {
-    if ( !CCLayer::init() )
-        return false;
+	if ( !CCLayer::init() )
+		return false;
 
 	//初始化
 	Map* map=initMap();
 	initControlPanel(map);
-	
+
 	return true;
 }
 
@@ -33,9 +34,15 @@ bool HelloWorld::init()
 Map* HelloWorld::initMap()
 {
 	//创建地图
-	Map* map=Map::create();
-	map->setGameStartPos();
+	int mapNo=sGlobal->mapState->mapNo;
+	Map* map;
+	if(mapNo==MAP11)map=Map::create(MAP11_PATH);//读取地图号map11
+	else map=Map::create(MAP12_PATH);//读取地图号map12	
+	//@eManager
+	sGlobalRes::instance()->map=map;
+	eManager->load(0);//@rGlobal->mapState->sTime
 	map->initNPC();
+	map->setGameStartPos();
 
 	CCLayer* mapLayer=CCLayer::create();
 	map->setTag(MAP);
@@ -48,6 +55,7 @@ Map* HelloWorld::initMap()
 void HelloWorld::initControlPanel(Map* map)
 {
 	ControlPanel* panel=ControlPanel::create(map);
+	//rGlobal->panel=panel;
 	panel->hero->setTag(HERO);
 	this->getChildByTag(MAPLAYER)->addChild(panel->hero,3);
 	this->addChild(panel,15);

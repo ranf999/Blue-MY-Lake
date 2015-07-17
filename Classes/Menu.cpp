@@ -14,15 +14,13 @@ bool Menu::init()
 	CCLabelTTF *label2 = CCLabelTTF::create("Quit", "Heiti SC", fontSize);
 	CCLabelTTF *label3 = CCLabelTTF::create("Back", "Heiti SC", fontSize);
 	CCLabelTTF *label4 = CCLabelTTF::create("Info", "Heiti SC", fontSize);
-	CCLabelTTF *label5 = CCLabelTTF::create("Web", "Heiti SC", fontSize);
-	CCArray* aLabel=CCArray::create(label4,label5,label1,label2,label3,NULL);
+	CCArray* aLabel=CCArray::create(label4,label1,label2,label3,NULL);
 
-	CCMenuItemImage *img1=CCMenuItemImage::create(ITEM_IMG_PATH,ITEM2_IMG_PATH,this,menu_selector(Menu::mssn));
+	CCMenuItemImage *img1=CCMenuItemImage::create(ITEM_IMG_PATH,ITEM2_IMG_PATH,this,menu_selector(Menu::save));
 	CCMenuItemImage *img2=CCMenuItemImage::create(ITEM_IMG_PATH,ITEM2_IMG_PATH,this,menu_selector(Menu::quit));
 	CCMenuItemImage *img3=CCMenuItemImage::create(ITEM_IMG_PATH,ITEM2_IMG_PATH,this,menu_selector(Menu::ret));
 	CCMenuItemImage *img4=CCMenuItemImage::create(ITEM_IMG_PATH,ITEM2_IMG_PATH,this,menu_selector(Menu::info));
-	CCMenuItemImage *img5=CCMenuItemImage::create(ITEM_IMG_PATH,ITEM2_IMG_PATH,this,menu_selector(Menu::web));
-	CCArray* aImg=CCArray::create(img4,img5,img1,img2,img3,NULL);
+	CCArray* aImg=CCArray::create(img4,img1,img2,img3,NULL);
 	for(int i=0;i<aLabel->count();i++)
 	{
 		CCMenuItemImage* img=(CCMenuItemImage*)aImg->objectAtIndex(i);
@@ -31,7 +29,7 @@ bool Menu::init()
 		img->addChild(label);
 	}
 
-	menu=CCMenu::create(img4,img5,img1,img2,img3,NULL);
+	menu=CCMenu::create(img4,img1,img2,img3,NULL);
 	menu->alignItemsVertically();
 	menuButton->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width-
 		sp->getContentSize().width/2,CCDirector::sharedDirector()->getWinSize().height-
@@ -40,17 +38,15 @@ bool Menu::init()
 		sp->getContentSize().width/2,CCDirector::sharedDirector()->getWinSize().height-
 		sp->getContentSize().height*aLabel->count()/2));
 	this->addChild(menu);
-
 	ret(NULL);
 	return true;
 }
 
-void Menu::mssn(CCObject* sender)
+void Menu::save(CCObject* sender)
 {
-	cocos2d::CCUserDefault::sharedUserDefault()->setIntegerForKey("PositionX", hero->getHeroTilePos().x);
-	cocos2d::CCUserDefault::sharedUserDefault()->setIntegerForKey("PositionY", hero->getHeroTilePos().y);
-	cocos2d::CCUserDefault::sharedUserDefault()->setIntegerForKey("MapProcess", hero->mapNo);
-	cocos2d::CCUserDefault::sharedUserDefault()->flush();
+   sGlobal->save();
+   //@present diabox to  confirm
+   ret(NULL);
 }
 
 void Menu::quit(CCObject* sender)
@@ -82,9 +78,4 @@ void Menu::setHero(Hero* hero)
 void Menu::info(CCObject* sender){
 	CCScene *pScene = Gallery::scene();
 	CCDirector::sharedDirector()->pushScene(pScene);
-}
-
-
-void Menu::web(CCObject* sender){
-CCLOG("11111");
 }

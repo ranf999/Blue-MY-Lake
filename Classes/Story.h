@@ -2,6 +2,7 @@
 #define __StoryWorld_SCENE_H__
 
 #include "cocos2d.h"
+#include "AppMacros.h"
 #include "PlayReader.h"
 #include "CombatScene.h"
 #include "SimpleAudioEngine.h"

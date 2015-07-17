@@ -14,8 +14,3 @@ bool ControllerListener::hasTouchEnded()
 {
 	return true;
 }
-
-void ControllerListener::setNext(ControllerListener* next)
-{
-	this->next=next;
-}

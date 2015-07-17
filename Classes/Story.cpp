@@ -1,65 +1,38 @@
 #include "Story.h"
-#include "AppMacros.h"
 
 USING_NS_CC;
 //update: 2014-9-30 13:29:52
 
 CCScene* StoryWorld::scene() {
     CCScene *scene = CCScene::create();
-    
     StoryWorld *layer = StoryWorld::create();
 	layer->setTag(1);
-
     scene->addChild(layer);
-
     return scene;
 }
 
-// on "init" you need to initialize your instance
 bool StoryWorld::init() {
-    
     if ( !CCLayer::init() )
     {
         return false;
     }
 
-	//theName = reader.PlayerNames();
     char theName[10][11]={"","穆婧:", "子轩:", "少杰:", "建国", "路人A:", "路人B:", "路人C:", "老爷爷:", "江姐:"};
-    
     char play[20] = SCRIPT_PATH;
-    //CCUserDefault::sharedUserDefault()->setIntegerForKey("Process", '7');@
-    //CCUserDefault::sharedUserDefault()->flush();@
-    current = CCUserDefault::sharedUserDefault()->getIntegerForKey("Process")+'0';//stay
-	//if(current>'9'||current<'0')current='0';
-	//current = saver.getProcess();
-//	current='9';//delete
+    int current=sGlobal->mapState->storyCnt+'0';//stay
     play[SCRIPT_PATH_LEN] = current;
-    //CCLog(play);
-    //cocos2d::CCString fullPath = CCFileUtils::sharedFileUtils()->fullPathForFilename(play);
     reader.ReadFileWithFullPath(CCFileUtils::sharedFileUtils()->fullPathForFilename(play));
-    
-    
     setTouchEnabled(true);
-    
-    
     CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
     CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
-
     CCMenuItemImage *pCloseItem = CCMenuItemImage::create(
-                                        CLOSEN_IMG_PATH,
-                                        CLOSES_IMG_PATH,
-                                        this,
-                                        menu_selector(StoryWorld::menuCloseCallback));
-    
+                                        CLOSEN_IMG_PATH, CLOSES_IMG_PATH, this, menu_selector(StoryWorld::menuCloseCallback)); 
 	pCloseItem->setPosition(ccp(origin.x + visibleSize.width - pCloseItem->getContentSize().width/2 ,
                                 origin.y + pCloseItem->getContentSize().height/2));
-
     
     CCMenu* pMenu = CCMenu::create(pCloseItem, NULL);
     pMenu->setPosition(CCPointZero);
     addChild(pMenu, 2);
-    
-
     
     char bg_name[30] = BGNAME_IMG_PATH;
     bg_name[BGNAME_PATH_LEN] = current;
@@ -80,19 +53,16 @@ bool StoryWorld::init() {
     pName->setAnchorPoint(CCPointZero);
     addChild(pName, 1);
     
-    
     CCLabelTTF* pLabel = CCLabelTTF::create("Click to Start", "Heiti SC", 40);
     pLabel->setTag(100);
     pLabel->setPosition(ccp(40, origin.y + dialogBox->getContentSize().height - 3.4 * pLabel->getContentSize().height));
     pLabel->setAnchorPoint(CCPointZero);
     pLabel->setDimensions(CCSizeMake(1100, 0));
-//    pLabel->setFontFillColor(ccc3(255, 0, 0));
     pLabel->setHorizontalAlignment(kCCTextAlignmentLeft);
     addChild(pLabel, 1);
     
-    
-    CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("vdrawing.plist");
-    CCSpriteBatchNode *spriteBatch=CCSpriteBatchNode::create("vdrawing.png");
+    CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile(PLIST_IMG_PATH);
+    CCSpriteBatchNode *spriteBatch=CCSpriteBatchNode::create(VDRAWING_IMG_PATH);
     spriteBatch->setTag(102);
     addChild(spriteBatch, 0);
     spriteBatch->setPosition(CCPointZero);
@@ -105,7 +75,6 @@ bool StoryWorld::init() {
     spriteBatch->addChild(leftSprite, 0);
     
     CCSprite *rightSprite=CCSprite::createWithSpriteFrameName("blank.png");
-    //rightSprite->setScale(0.8);
     rightSprite->setPosition(ccp(800, 130));
     rightSprite->setTag(2);
     rightSprite->setOpacity(0);
@@ -139,7 +108,6 @@ void StoryWorld::avgGame(void) {
             myLeftSprite->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(b));
         }
             break;
-            
         case '1': {   //ME
             char b[10]="me_ .png";
             b[3] = dialog[1]+1;
@@ -194,7 +162,6 @@ void StoryWorld::avgGame(void) {
             myRightSprite->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(b));
         }
             break;
-            
         default:
             break;
     }
@@ -205,7 +172,7 @@ void StoryWorld::avgGame(void) {
             //开始选择走向
             //停止触摸
             setTouchEnabled(false);
-            CCSprite *back = CCSprite::create("Landscape.png");
+            CCSprite *back = CCSprite::create(LANDSCAPE_IMG_PATH);
             back->setPosition(ccp(CCDirector::sharedDirector()->getVisibleSize().width/2, CCDirector::sharedDirector()->getVisibleSize().height/2));
             back->setOpacity(150);
             back->setTag(3);
@@ -251,7 +218,6 @@ void StoryWorld::avgGame(void) {
                     return;
                 }
                     break;
-                    
                 default:
                     break;
             }
@@ -294,27 +260,17 @@ void StoryWorld::avgGame(void) {
     switch (dialog[3]) {
         case '1':{    // 保存进度
             current+=1;
-//            saver.saveProcess(current);
-            CCUserDefault::sharedUserDefault()->setIntegerForKey("Process", current-'0');
-            CCUserDefault::sharedUserDefault()->flush();
-            
-//            char play[8] = "Script ";
-//            play[6] = current;
-            //cocos2d::CCString fullPath = cocos2d::CCFileUtils::sharedFileUtils()->fullPathForFilename(play);
 			CCEGLView::sharedOpenGLView()->setDesignResolutionSize(672, 448, kResolutionExactFit);
-//            reader.ChangeFile(CCFileUtils::sharedFileUtils()->fullPathForFilename(play));
             CCDirector::sharedDirector()->popScene();
             // TODO: POP OUT
         }
             break;
         case '2':{    // wanjie
-            //CCLog("jieshule");
-           //wanjie animation
-			CCSprite* staff_bg = CCSprite::create("staff_bg.png");
+			CCSprite* staff_bg = CCSprite::create(STAFFBG_IMG_PATH);
 			staff_bg->setPosition(ccp(CCDirector::sharedDirector()->getVisibleSize().width/2 + CCDirector::sharedDirector()->getVisibleOrigin().x, CCDirector::sharedDirector()->getVisibleSize().height/2 + CCDirector::sharedDirector()->getVisibleOrigin().y));
 			addChild(staff_bg, 4);
 
-			CCSprite* staff = CCSprite::create("staff.png");
+			CCSprite* staff = CCSprite::create(STAFF_IMG_PATH );
 			staff->setPosition(ccp(CCDirector::sharedDirector()->getVisibleSize().width/2, -CCDirector::sharedDirector()->getVisibleSize().height/2));
 			addChild(staff, 5);
 
@@ -325,24 +281,14 @@ void StoryWorld::avgGame(void) {
 				NULL);
 
 			staff->runAction(sequneceAction);
-            // return to zhujiemians
-			
         }
             break;
         case '3':{
-            //this->runAction(CCSequence::create(CCFadeOut::create(1),CCFadeIn::create(1),NULL));
-            //CCLog("fade");
-            /*CCArray *children = getChildren();
-             CCObject *pobj;
-             CCARRAY_FOREACH(children, pobj) {
-             ((CCNode *)pobj)->runAction(CCFadeOut::create(1));
-             }*/
-            CCSprite *black = CCSprite::create("black.png");
+            CCSprite *black = CCSprite::create(BLACK_IMG_PATH);
             black->setPosition(ccp(CCDirector::sharedDirector()->getVisibleSize().width/2, CCDirector::sharedDirector()->getVisibleSize().height/2));
             black->setOpacity(0);
             addChild(black, 4);
             black->runAction(CCSequence::create(CCFadeIn::create(0.5), CCFadeOut::create(0.5), NULL));
-            
         }
             break;
         default:
@@ -351,11 +297,7 @@ void StoryWorld::avgGame(void) {
     
     //音效
     switch (dialog[4]) {
-        case '1': 
-        case '2': 
-        case '3':
-        case '4':
-        case '5':
+        case '1': case '2': case '3': case '4': case '5':
         case '6':{
             char musicName[7] = " .mp3";
             musicName[0] = dialog[4];
@@ -370,12 +312,7 @@ void StoryWorld::avgGame(void) {
             CocosDenshion::SimpleAudioEngine::sharedEngine()->stopBackgroundMusic(true);
         }
             break;
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
+        case '8': case '9': case 'A': case 'B': case 'C': case 'D':
         case 'G':{
             char effectName[7] = " .wav";
             effectName[0] = dialog[4];
@@ -384,8 +321,7 @@ void StoryWorld::avgGame(void) {
             CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect(CCFileUtils::sharedFileUtils()->fullPathForFilename(effectName).c_str());
         }
             break;
-        case 'E': 
-        case 'F': 
+        case 'E': case 'F': 
         case 'H':{
             char effectName[7] = " .mp3";
             effectName[0] = dialog[4];
@@ -394,7 +330,6 @@ void StoryWorld::avgGame(void) {
             CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect(CCFileUtils::sharedFileUtils()->fullPathForFilename(effectName).c_str());
         }
             break;
-
         default:
             break;
     }
@@ -419,7 +354,6 @@ void StoryWorld::avgGame(void) {
             }
         }
     }
-	////CCLog(dialog+5);
     myDialog->setString(dialog+5);
 }
 
@@ -432,13 +366,13 @@ void StoryWorld::makeAChoice(CCObject *sender) {
                 cout << "xuanchuan " << endl;
                 removeChildByTag(2);
                 removeChildByTag(3);
-                CCSprite *blackBG = CCSprite::create("black.png");
+                CCSprite *blackBG = CCSprite::create(BLACK_IMG_PATH);
                 blackBG->setPosition(ccp(CCDirector::sharedDirector()->getVisibleSize().width/2, CCDirector::sharedDirector()->getVisibleSize().height/2));
                 blackBG->setScale(1);
                 blackBG->setTag(21);
                 addChild(blackBG, 2);
                 // TODO
-                CCLabelTTF *xuanchuan = CCLabelTTF::create();//"        四川大学的历史源头最早可以追溯到康熙年间的锦江书院。锦江书院在清代雍正十一年(1733年)，被御定为全国22所最著名的省级书院之一，时人曾誉以“石室云霞思古梦，锦江风雨读书灯”。\n        锦江书院最有名的“功名富贵”楹联是：有补于天地曰功，有益于世教曰名，有精神之谓富，有廉耻之谓贵；不涉鄙陋斯为文，不入暧昧斯为章，溯乎始之谓道，信乎己之谓德。\n         锦江书院聘请了许多名流学者主讲，其中最有名的是担任山长近20年的四川丹棱人彭端淑（约1699一约1779年）。他与李调元、张问陶并称清代四川三才子，《为学一首示子侄》收入今天的中小学教材。\n        锦江书院学生刘光第（1859-1898），四川富顺人，1879-1882年在锦江书院就读，光绪九年（1883）进士，是戊戌变法殉难的“六君子”之一。", "Heiti SC", 40);
+                CCLabelTTF *xuanchuan = CCLabelTTF::create();
                 xuanchuan->setPosition(ccp(0, 40));
                 xuanchuan->setHorizontalAlignment(kCCTextAlignmentLeft);
                 xuanchuan->setAnchorPoint(CCPointZero);
@@ -447,8 +381,8 @@ void StoryWorld::makeAChoice(CCObject *sender) {
                 addChild(xuanchuan, 3);
                 
                 // 关闭按钮
-                CCMenuItemImage *start = CCMenuItemImage::create("leafletsclose.png",
-                                                                 "leafletsclose.png",
+                CCMenuItemImage *start = CCMenuItemImage::create(LEAFLET_IMG_PATH,
+                                                                 LEAFLET_IMG_PATH,
                                                                  this,
                                                                  menu_selector(StoryWorld::menuLeafletsCloseCallback));
                 
@@ -466,21 +400,10 @@ void StoryWorld::makeAChoice(CCObject *sender) {
             case sChoice:
 			default:{
 				current+=1;
-				CCUserDefault::sharedUserDefault()->setIntegerForKey("Process", current);
-				CCUserDefault::sharedUserDefault()->flush();
-
 				CCEGLView::sharedOpenGLView()->setDesignResolutionSize(480, 320, kResolutionExactFit);
-//				reader.ChangeFile(CCFileUtils::sharedFileUtils()->fullPathForFilename(play));
 				CCDirector::sharedDirector()->popScene();
-//                removeChildByTag(2);
-//                removeChildByTag(3);
-//                setTouchEnabled(true);
-//                reader.ChangeFile(CCFileUtils::sharedFileUtils()->fullPathForFilename("Script4"));
-//                avgGame();
             }
                 return;
-//            default:
-//                break;
         }
     }
     char fileName[8] = "Fin ";
@@ -495,7 +418,6 @@ void StoryWorld::makeAChoice(CCObject *sender) {
         case tChoice:
             fileName[3]='3';
             break;
-            
         default:
             break;
     }
@@ -506,7 +428,6 @@ void StoryWorld::makeAChoice(CCObject *sender) {
     setTouchEnabled(true);
     
     avgGame();
-    //CCLog("choice %d is selected!", choice);
 }
 
 void StoryWorld::over() {
@@ -521,15 +442,10 @@ void StoryWorld::menuLeafletsCloseCallback(CCObject* sender) {
     removeChildByTag(23);
     setTouchEnabled(true);
     current+=1;
-//    saver.saveProcess(current);
     CCUserDefault::sharedUserDefault()->setIntegerForKey("Process", current);
     CCUserDefault::sharedUserDefault()->flush();
 	CCEGLView::sharedOpenGLView()->setDesignResolutionSize(480, 320, kResolutionExactFit);
-//	reader.ChangeFile(CCFileUtils::sharedFileUtils()->fullPathForFilename(play));
 	CCDirector::sharedDirector()->popScene();
-//    reader.ChangeFile(CCFileUtils::sharedFileUtils()->fullPathForFilename("Script4"));
-//    CCSprite *Background = (CCSprite *)getChildByTag(108);
-//    Background->setTexture(CCTextureCache::sharedTextureCache()->addImage("bg_400.jpg"));
 }
 
 void StoryWorld::menuCloseCallback(CCObject* pSender) {
