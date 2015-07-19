@@ -6,7 +6,7 @@
 class GetSuPEvent: public Event
 {
 public:
-    CREATE_FUNC(TalkManEvent);
+    CREATE_FUNC(GetSuPEvent);
 public:
     void happen();
 };

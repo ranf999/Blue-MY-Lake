@@ -57,6 +57,7 @@
 #define FACEDIR_MRCD "FaceDirection"
 #define MAPNO_MRCD "MapNo"
 #define STORYCNT_MRCD "StoryCnt"
+#define EVENTDONE_MRCD "EventDone"
 
 #define SPEED_SRCD "Speed"
 #define TELEPORT_SRCD "Teleport"
@@ -72,6 +73,7 @@
 #define FACEDIR_INI 0
 #define MAPNO_INI MAP11
 #define STORYCNT_INI 0
+#define EVENTDONE_INI ""
 
 #define SPEED_INI 2.0
 #define TELEPORT_INI false
@@ -79,6 +81,9 @@
 #define SURF_INI false
 #define FLASH_INI false
 #define ALL_SUPERPOWER_INI false
+
+#define MAX_DONE_LIST 100
+#define DEFUALT_DELIM ','
 
 //画面分辨率
 #define JX_RESOLUWID 1136
@@ -128,12 +133,6 @@
 (若为talkative man事件，id是对应字母减'a'，属性nstr为共有几句话，属性0~9为语句值)
 把信息存在块儿里的问题在于每个事件需要一个不一样的块儿。
 但是即使不存字参数不一样，也还是得每个一个块儿。*/
-/*另一个方案是把它放在对象层，在一开始加载的时候就按照id
-初始化给人和路标对象。这样块儿里只存事件名，不存id。
-这样块儿就变成了单纯的事件的代表。可以一色一事件。
-然后归一为走动NPC的交互方法。这样倒是也可以。
-甚至我们可以把人都加载进来，放一层，不显示，作为位置形象提示。
-*/
 
 
 #define INFORMATION_GRP "information"
@@ -147,18 +146,30 @@
 #define TURNINGMAN_ATTNUM 3
 #define STANDINGMAN_ATTNUM 4
 #define MARK 100
-/*
-新建NPC的步骤：
-1.在NPC所在位置在wall层画障碍
-2.在information层的对应man对象的属性中，新建属性 npc?x, npc?y，npc?z（，npc?{）并更改属性nnpc（用XML编辑）
-3.如果有交互在NPC所在位置在event层画块儿，并新建属性atrg，id
-*/
 
 #define EGLVIEW 0.3
 #define ZOOMSTROKELEN 200
 
 
+
+/* define a event
+ * 1. define Event subClass
+ * 2. define Event Id here
+ * 3. register with Event Loader
+ * 4. for A Trig, register listener with eManaer listener()
+ * 5. for Stand Trig, register instant with isInstant() */
+
+//For Event CSV
+#define EVENT_ATT_NUM 9
+#define A_TRIG 0
+#define STAND_TRIG 1
+#define STAND_TRIG_IMGNO -10
+#define ATRIG_NO_MAN_IMGNO -1
+
+//Event Ids
 #define NO_EVENT_FLAG -1
+#define TALKMAN_EVT 0
+#define GET_SUP_EVT 1
 
 typedef enum{kNone=1,kWall=17,kEvent=41}CollisionType;
 typedef enum{Down=0,Left=1,Right=2,Up=3}FaceDirection;

@@ -56,6 +56,6 @@
 
 #define MENU_IMG_PATH "img/new combat/menu.png"
 //read csv
-#define  A_CSV_PATH "ability.csv"
-#define  M_CSV_PATH "monster.csv"
+#define  A_CSV_PATH "csv/ability.csv"
+#define  M_CSV_PATH "csv/monster.csv"
 #endif

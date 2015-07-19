@@ -4,7 +4,6 @@
 #include "HumanEntity.h"
 #include "DiaWindow.h"
 #include "Backpack.h"
-//#include "ControlPanel.h"
 
 class GlobalRes
 {
@@ -14,7 +13,6 @@ public:
     Window* rwindow;
     DiaWindow* diawindow;
     Backpack* backpack;
-	//ControlPanel* panel; //is ControlPanel too high on the dependence tree?
 };
 //note that when an event wish to walk the hero, do as follow:
 //WalkingMan* walkHero=(WalkingMan*)rGloble->hero;

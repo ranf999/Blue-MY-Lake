@@ -37,8 +37,8 @@ void ButtonA::ccTouchesBegan(CCSet* pTouches, CCEvent *pEvent)
 	if(controllerListener->hasTouchEnded())
 	{
 		this->setControllerListener(NULL);
-		eManager->next();
 	    this->enableDirButton();
+		eManager->next();
 	}
     }
     //如果没有监听对象

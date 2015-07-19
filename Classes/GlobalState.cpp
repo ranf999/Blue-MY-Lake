@@ -1,8 +1,11 @@
 #include "GlobalState.h"
+#include "RcdUtil.h"
 #define SAVE_INT CCUserDefault::sharedUserDefault()->setIntegerForKey
 #define SAVE_BOOL CCUserDefault::sharedUserDefault()->setBoolForKey
+#define SAVE_STRING CCUserDefault::sharedUserDefault()->setStringForKey
 #define LOAD_INT CCUserDefault::sharedUserDefault()->getIntegerForKey
 #define LOAD_BOOL CCUserDefault::sharedUserDefault()->getBoolForKey
+#define LOAD_STRING CCUserDefault::sharedUserDefault()->getStringForKey
 
 void GlobalState::load()
 {
@@ -24,20 +27,12 @@ void GlobalState::save()
    SAVE_BOOL(TELEPORT_SRCD, superPower->teleport);
    SAVE_BOOL(STEALTH_SRCD, superPower->stealth);
    SAVE_BOOL(SURF_SRCD, superPower->surf);
+   saveDoneList();
 }
 
 void GlobalState::newr()
 {
-   SAVE_INT(POSITIONX_MRCD,POSITIONX_INI);
-   SAVE_INT(POSITIONY_MRCD,POSITIONY_INI);
-   SAVE_INT(FACEDIR_MRCD,FACEDIR_INI);
-   SAVE_INT(MAPNO_MRCD,MAPNO_INI);
-   SAVE_INT(STORYCNT_MRCD,STORYCNT_INI);
-
-   SAVE_INT(SPEED_SRCD,SPEED_INI);
-   SAVE_BOOL(TELEPORT_SRCD,TELEPORT_INI);
-   SAVE_BOOL(STEALTH_SRCD,STEALTH_INI);
-   SAVE_BOOL(SURF_SRCD,SURF_INI);
+	CCUserDefault::sharedUserDefault()->purgeSharedUserDefault();
 }
 
 GlobalState::~GlobalState()
@@ -69,13 +64,32 @@ void GlobalState::loadSuperPower()
 
 void GlobalState::loadDoneList()
 {
-	doneList=new bool[100];//@macro
-	for(int i=0;i<100;i++)
+	for(int i=0;i<MAX_DONE_LIST;i++)
 		doneList[i]=false;
-	//load from file
+	CCString* rcd=CCString::create(LOAD_STRING(EVENTDONE_MRCD,EVENTDONE_INI));
+	CCArray* list=RcdUtil::split(rcd,DEFUALT_DELIM);
+	for(int i=0;i<list->count();i++)
+	{
+		CCString* str=(CCString*)list->objectAtIndex(i);
+		doneList[str->intValue()]=true;
+	}
 }
 
 void GlobalState::loadPlayerState()
 {
 
+}
+
+void GlobalState::saveDoneList()
+{
+	CCArray* list=CCArray::create();
+	for(int i=0;i<MAX_DONE_LIST;i++)
+		if(doneList[i]==true)
+		{
+			char tmp[50];
+			sprintf(tmp, "%d", i);
+			CCString* str=CCString::create(tmp);
+			list->addObject(str);
+		}
+	RcdUtil::saveList(list,DEFUALT_DELIM);
 }

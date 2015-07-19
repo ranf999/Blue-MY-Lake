@@ -12,10 +12,7 @@ ControllerListener* EventManager::happen(CCPoint coord, int ent)
 	//get eventId
 	int eventId=(ent==STAND_TRIG)?eStand->tileAt(coord):eAtrgr->tileAt(coord);
 	if(eventId<=NO_EVENT_FLAG)
-	{
-	    CCLog("EventManager::sAtrg shows that there is no event at the spot.");
 	    return NULL;
-	}
 
 	//get event
 	Event* event=findEventById(eventId);
@@ -32,11 +29,26 @@ ControllerListener* EventManager::happen(CCPoint coord, int ent)
 		if(!sGlobal->doneList[intg->getValue()])return NULL;
 	}
 
+	//check repeat
+	if(!event->repeat && sGlobal->doneList[event->id]==true) 
+		return NULL;
+
 	//event happen
-	event->happen();
-	onGoing=event;
-	if(!event->repeat)markHappened(event);
-	return listener(event->type);
+	Event* curPtr=event;
+	ControllerListener* subject=NULL;
+	do
+	{
+		curPtr->happen();
+		onGoing=curPtr;
+		if(!curPtr->repeat)markHappened(curPtr);
+		if(listener(onGoing->type)!=NULL) subject=listener(onGoing->type);
+		if(!isInstant(curPtr)) break;
+
+		curPtr=findEventById(event->next);
+	}
+	while(curPtr==NULL);
+
+	return subject;
 }
 
 void EventManager::next()
@@ -111,3 +123,12 @@ void EventManager::loadEmap()
 	}
 } 
 
+int EventManager::isInstant(Event* event)
+{
+	const int nn=2;
+	const int instant[nn]={GET_SUP_EVT};
+	for(int i=0;i<nn;i++)
+		if(event->id==instant[i])
+			return TRUE;
+	return FALSE;
+}
