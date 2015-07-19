@@ -3,6 +3,8 @@
 
 #include "GlobalPath.h"
 #include "cocos2d.h"
+//last: 2014-9-29 13:23:33
+//update: 2014-11-17 18:08:39
 
 
 //layer的命名法是scene的首字母加layer名加LAYER
@@ -55,6 +57,7 @@
 #define FACEDIR_MRCD "FaceDirection"
 #define MAPNO_MRCD "MapNo"
 #define STORYCNT_MRCD "StoryCnt"
+#define EVENTDONE_MRCD "EventDone"
 
 #define SPEED_SRCD "Speed"
 #define TELEPORT_SRCD "Teleport"
@@ -70,6 +73,7 @@
 #define FACEDIR_INI 0
 #define MAPNO_INI MAP11
 #define STORYCNT_INI 0
+#define EVENTDONE_INI ""
 
 #define SPEED_INI 2.0
 #define TELEPORT_INI false
@@ -77,6 +81,9 @@
 #define SURF_INI false
 #define FLASH_INI false
 #define ALL_SUPERPOWER_INI false
+
+#define MAX_DONE_LIST 100
+#define DEFUALT_DELIM ','
 
 //画面分辨率
 #define JX_RESOLUWID 1136
@@ -92,8 +99,13 @@
 //属性名的命名法是属性名加_ATT
 #define STANDTRG_ATT "stand"
 #define ATRG_ATT "atrg"
+
 #define ID_ATT "id"
+
+
+
 #define ROADSIGN_EVT "road sign"
+
 #define TALKATIVEMAN_EVT "talkative man"
 #define NSTR_ATT "nstr"
 
@@ -111,6 +123,7 @@
 
 #define ANIMATE_EVT "animate"
 #define PLACENAME_EVT "place name"
+
 /*新建事件的步骤：
 1.选定一个块儿，新建属性stand/atrg=事件名，id=参数。
 2.在event层把这个块儿画在合适的位置。
@@ -138,24 +151,25 @@
 #define ZOOMSTROKELEN 200
 
 
-//For EventLoader
-/* Adding a event
- * 1. define Event Class
- * 2. define Event Id here
- * 3. register Event create with EventLoader
- * 4. Instant Event register with EventManager happen()
- * 5. EnduringEvent register window with listener()*/
-#define EVENT_ATT_NUM 9
-#define NO_EVENT_FLAG -1
-#define TALKMAN_EVT 0
-#define GET_SUPOWER_EVT 1
 
-//For EventManager
+/* define a event
+ * 1. define Event subClass
+ * 2. define Event Id here
+ * 3. register with Event Loader
+ * 4. for A Trig, register listener with eManaer listener()
+ * 5. for Stand Trig, register instant with isInstant() */
+
+//For Event CSV
+#define EVENT_ATT_NUM 9
 #define A_TRIG 0
 #define STAND_TRIG 1
 #define STAND_TRIG_IMGNO -10
 #define ATRIG_NO_MAN_IMGNO -1
-#define EVENT_CSV_PATH "csv/event%d.csv"
+
+//Event Ids
+#define NO_EVENT_FLAG -1
+#define TALKMAN_EVT 0
+#define GET_SUP_EVT 1
 
 typedef enum{kNone=1,kWall=17,kEvent=41}CollisionType;
 typedef enum{Down=0,Left=1,Right=2,Up=3}FaceDirection;

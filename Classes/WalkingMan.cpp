@@ -56,7 +56,7 @@ void WalkingMan::initAnimation()
 		walkAnimations[i]=createAnimationForDirection(i);
 }
 
-//创建四个方向的行走动画
+//
 CCAnimation* WalkingMan::createAnimationForDirection(int dirc)
 {
 	char addr[20]=MAN_IMG_PATH;

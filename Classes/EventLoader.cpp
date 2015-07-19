@@ -19,7 +19,7 @@ CCArray* EventLoader::start(const char* sFilePath)
 		{
 			case TALKMAN_EVT:
 				event=TalkManEvent::create(); break;
-			case GET_SUPOWER_EVT:
+			case GET_SUP_EVT:
 				event=GetSuPEvent::create(); break;
 				/*case ITEM_EVT:
 				  event=ItemEvent::create(); break;

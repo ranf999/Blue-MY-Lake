@@ -19,7 +19,7 @@ public:
     SuperPower* superPower;
     CombatUnit* playerState;
     BagRecord* bagRecord;
-    bool* doneList;
+    bool doneList[MAX_DONE_LIST];
 public:
     void load();
     void save();
@@ -30,6 +30,7 @@ private:
     void loadSuperPower();
     void loadDoneList();
     void loadPlayerState();
+	void saveDoneList();
 };
 #define sGlobal GlobalState::instance()
 #endif

@@ -1,0 +1,14 @@
+# Tile Map
+*.tmx
+
+# Text Based
+*.csv
+*.txt
+
+# Img
+*.png
+*.jepg
+*.jpg
+
+# document
+*.doc

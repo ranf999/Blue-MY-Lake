@@ -3,9 +3,9 @@
 
 void GetSuPEvent::happen()
 {
-    superPower->speed = 3;
-    superPower->teleport = true;
-    superPower->stealth = true;
-    superPower->surf = true;
-    superPower->flash= true;
+    sGlobal->superPower->speed = 3;
+    sGlobal->superPower->teleport = true;
+    sGlobal->superPower->stealth = true;
+    sGlobal->superPower->surf = true;
+    sGlobal->superPower->flash= true;
 }
