@@ -1,4 +1,6 @@
 #include "Menu.h"
+#include "ButtonA.h"
+#include "FileLoadUtil.h"
 
 bool Menu::init()
 {
@@ -10,11 +12,15 @@ bool Menu::init()
 	this->addChild(menuButton);
 	const int fontSize=23;
 	
-	CCLabelTTF *label1 = CCLabelTTF::create("Save", "Heiti SC", fontSize);
-	CCLabelTTF *label2 = CCLabelTTF::create("Quit", "Heiti SC", fontSize);
-	CCLabelTTF *label3 = CCLabelTTF::create("Back", "Heiti SC", fontSize);
-	CCLabelTTF *label4 = CCLabelTTF::create("Info", "Heiti SC", fontSize);
-	CCArray* aLabel=CCArray::create(label4,label1,label2,label3,NULL);
+	CCArray* lines=FileLoadUtil::sharedFileLoadUtil()->getDataLines(MENU_LABEL_CSV_PATH);
+	CCString* firstLine=(CCString*)lines->objectAtIndex(0);
+	CCArray* nameList= StringUtil::sharedStrUtil()->split(firstLine->getCString(), ",");
+	CCArray* aLabel=CCArray::create();
+	for(int i=0;i<nameList->count();i++)
+	{
+		CCString* str=(CCString*)nameList->objectAtIndex(i);
+		aLabel->addObject(CCLabelTTF::create(str->getCString(), "Heiti SC", fontSize));
+	}
 
 	CCMenuItemImage *img1=CCMenuItemImage::create(ITEM_IMG_PATH,ITEM2_IMG_PATH,this,menu_selector(Menu::save));
 	CCMenuItemImage *img2=CCMenuItemImage::create(ITEM_IMG_PATH,ITEM2_IMG_PATH,this,menu_selector(Menu::quit));
@@ -44,14 +50,25 @@ bool Menu::init()
 
 void Menu::save(CCObject* sender)
 {
-   sGlobal->save();
-   //@present diabox to  confirm
-   ret(NULL);
+	sGlobal->save();
+	ret(NULL);
+	
+	//@present diabox to  confirm
+	ControllerListener* lst;
+	if(sGlobal->isNight)
+		lst=eManager->happen(eManager->findEventById(SAVE_SUC_NIGHT_EVT_ID));
+	else lst=eManager->happen(eManager->findEventById(SAVE_SUC_DAY_EVT_ID));
+	ButtonA* buttonA=(ButtonA*)rGlobal->panel->getChildByTag(BUTTONA);
+	if(lst!=NULL) 
+	{
+		buttonA->setControllerListener(lst);
+		buttonA->disableDirButton();
+	}
 }
 
 void Menu::quit(CCObject* sender)
 {
-	CCDirector::sharedDirector()->end();
+	CCDirector::sharedDirector()->popScene();
 }
 
 void Menu::ret(CCObject* sender)

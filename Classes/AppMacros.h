@@ -3,17 +3,19 @@
 
 #include "GlobalPath.h"
 #include "cocos2d.h"
-//last: 2014-9-29 13:23:33
-//update: 2014-11-17 18:08:39
-
 
 //layer的命名法是scene的首字母加layer名加LAYER
 //layer是100+
+#define WELCOMELAYER 99
+#define SMENU 98
+#define PMENU 97
+
 #define HELLOWORLDLAYER 100
 
 //HelloWorld的儿子
 #define MAPLAYER 101
 #define CONTROLPANELLAYER 102
+#define COMBATLAYER 103
 
 //MapLayer的儿子
 #define MAP 590
@@ -29,11 +31,10 @@
 #define DIRBUTTON 1
 #define BUTTONA 10
 #define TOUCHSCREEN 100
+#define MENU 1000
 
 //Combat的儿子
 #define BACKGROUND 100 
-
-
 
 //Entity bind的sprite命名是IMGSP
 #define IMGSP 500
@@ -57,6 +58,12 @@
 #define FACEDIR_MRCD "FaceDirection"
 #define MAPNO_MRCD "MapNo"
 #define STORYCNT_MRCD "StoryCnt"
+#define HAS_SHADOW_MRCD "HasShadow"
+#define IS_BLOODY_MRCD "IsBloody"
+#define SH_STAND_P_MRCD "ShStandPos"
+#define DAY_TIME_MRCD "StoryTime"
+#define NIGHT_TIME_MRCD "NightStoryTime"
+
 #define EVENTDONE_MRCD "EventDone"
 
 #define SPEED_SRCD "Speed"
@@ -66,6 +73,8 @@
 #define FLASH_SRCD "Flash"
 #define ALL_SUPERPOWER_SRCD "AllSuperPower"
 
+#define EXP_CRCD "Exp"
+
 //游戏记录的初始值命名法是属性名加_INI
 #define FIRSTSAVE_INI true
 #define POSITIONX_INI 63
@@ -73,6 +82,11 @@
 #define FACEDIR_INI 0
 #define MAPNO_INI MAP11
 #define STORYCNT_INI 0
+#define HAS_SHADOW_INI false
+#define IS_BLOODY_INI false
+#define SH_STAND_P_INI 2
+#define DAY_TIME_INI 0
+#define NIGHT_TIME_INI 0
 #define EVENTDONE_INI ""
 
 #define SPEED_INI 2.0
@@ -82,7 +96,9 @@
 #define FLASH_INI false
 #define ALL_SUPERPOWER_INI false
 
-#define MAX_DONE_LIST 100
+#define EXP_INI 0
+
+#define MAX_DONE_LIST 2100
 #define DEFUALT_DELIM ','
 
 //画面分辨率
@@ -99,53 +115,26 @@
 //属性名的命名法是属性名加_ATT
 #define STANDTRG_ATT "stand"
 #define ATRG_ATT "atrg"
-
 #define ID_ATT "id"
 
-
-
 #define ROADSIGN_EVT "road sign"
-
 #define TALKATIVEMAN_EVT "talkative man"
-#define NSTR_ATT "nstr"
 
 #define PORTAL_EVT "portal"
 #define IDX_ATT "idx"
 #define IDY_ATT "idy"
 
-#define CHANGESCENE_EVT "change scene"
-#define MAP11 19
-#define MAP12 20
-#define EVENT_MAP11 0
-#define EVENT_MAP12 1
-
-
-
-#define ANIMATE_EVT "animate"
-#define PLACENAME_EVT "place name"
-
+#define INFORMATION_GRP "information"
+#define PLACENAMEID_OBJ "placenameID"
 /*新建事件的步骤：
 1.选定一个块儿，新建属性stand/atrg=事件名，id=参数。
 2.在event层把这个块儿画在合适的位置。
-//3.若为atrg事件，在wall层对应位置画块儿。
 (若为place name事件，要在地图的information对象层加placenameID对象，属性名为id值，属性值为地名)
-(若为portal事件,参数为idx和idy，代表传送目的地的坐标)
-(若为talkative man事件，id是对应字母减'a'，属性nstr为共有几句话，属性0~9为语句值)
-把信息存在块儿里的问题在于每个事件需要一个不一样的块儿。
-但是即使不存字参数不一样，也还是得每个一个块儿。*/
+(若为portal事件,参数为idx和idy，代表传送目的地的坐标)*/
 
-
-#define INFORMATION_GRP "information"
-#define	TURNINGMAN_OBJ "turningMan"
-#define STANDINGMAN_OBJ "standingMan"
-#define PLACENAMEID_OBJ "placenameID"
-
-#define NNPC_ATT "nnpc"
-#define NPCAX_ATT "npcax"
-
-#define TURNINGMAN_ATTNUM 3
-#define STANDINGMAN_ATTNUM 4
-#define MARK 100
+#define MAP10 18
+#define MAP11 19
+#define MAP12 20
 
 #define EGLVIEW 0.3
 #define ZOOMSTROKELEN 200
@@ -157,7 +146,8 @@
  * 2. define Event Id here
  * 3. register with Event Loader
  * 4. for A Trig, register listener with eManaer listener()
- * 5. for Stand Trig, register instant with isInstant() */
+ * 5. for A Trig, register notInstant with isInstant() 
+ * 6. document the CSV arg protocal */
 
 //For Event CSV
 #define EVENT_ATT_NUM 9
@@ -165,13 +155,61 @@
 #define STAND_TRIG 1
 #define STAND_TRIG_IMGNO -10
 #define ATRIG_NO_MAN_IMGNO -1
+#define MAP_SCALER 100
 
 //Event Ids
 #define NO_EVENT_FLAG -1
 #define TALKMAN_EVT 0
 #define GET_SUP_EVT 1
+#define DIALOG_EVT 2
+#define SHADOW_EVT 3
+#define RELOAD_EVT 4
+#define BLOODY_EVT 5
+#define WATERY_EVT 6
+#define DUEL_EVT 7
+#define LNIGHT_EVT 8
+#define LDAY_EVT 9
+#define IS_WIN_EVT 10
+#define HERO_DIS_EVT 11
+#define HERO_APP_EVT 12
+#define NPC_MOVE_EVT 13
 
+#define SAVE_SUC_DAY_EVT_ID 1010
+#define SAVE_SUC_NIGHT_EVT_ID 2010
+
+//Notification Center
+#define HERO_STEP_UP_MSG "HeroStepUp"
 typedef enum{kNone=1,kWall=17,kEvent=41}CollisionType;
 typedef enum{Down=0,Left=1,Right=2,Up=3}FaceDirection;
 
+//zorders
+#define HERO_ON_MAP_ZOR 5
+#define HERO_MOVE_BACK_ZOR 3
+#define NPC_ON_MAP_BACK_ZOR 4
+#define NPC_ON_MAP_FRON_ZOR 6
+#define HERO_ON_PANEL_ZOR 3
+#define PANEL_ON_MAPLYR_ZOR 15
+#define NIGHT_ON_PANEL_ZOR 20
+#define MURK_ON_PANEL_ZOR 20
+#define WIN_ON_PANEL_ZOR 31
+#define BTN_ON_PANEL_ZOR 30
+#define BLACK_ON_PANEL_ZOR 40
+
+//switches
+#define DEBUG_MODE true
+#define HERO_COVER_MODE FALSE
+#define TRUE 1
+#define FALSE 0
+
+//night fall
+#define DAYTIME_OPACITY 0
+#define NIGHTTIME_OPACITY 150
+#define MURK_TIME_OPACITY 150
+
+//combat
+#define PLAYER_WIN_FLAG 1
+#define MOSTER_WIN_FLAG 0
+
+//Gallery
+#define GAL_MAP_POS ccp(110,100)
 #endif /* __APPMACROS_H__ */

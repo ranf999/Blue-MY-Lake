@@ -9,6 +9,10 @@ public:
    int positionX;
    int positionY;
    int faceDir;
-   int sTime;
+   int dTime;
+   int nTime;
+   bool hasSh;
+   bool isBloody;
+   int standPos;
 };
 #endif

@@ -30,6 +30,8 @@ void PlacenameWindow::initSprite()
     CCPoint diff=base-dBase;
     dialogBox->setPosition(ccp(-diff.x,diff.y));
     dialogBox->setOpacity(0);
+
+	this->inAction=false;
 }
 
 void PlacenameWindow::load(CCTMXTiledMap* map,CCDictionary *properties)
@@ -50,13 +52,24 @@ void PlacenameWindow::load(CCTMXTiledMap* map,CCDictionary *properties)
 
 void PlacenameWindow::appear()
 {
+	dialogBox->stopAllActions(); // don't know if this helps
+	content->stopAllActions();
+	dialogBox->setOpacity(255);
+	content->setOpacity(255);
+
     CCFiniteTimeAction* in=CCFadeIn::create(0.5f);
     CCFiniteTimeAction* stay=CCDelayTime::create(2.0f);
     CCFiniteTimeAction* out=CCFadeOut::create(0.5f);
-    CCAction* placenameAct=CCSequence::create(in,stay,out,NULL);
+	CCCallFunc* reset=CCCallFunc::create(this,
+			callfunc_selector(PlacenameWindow::setActionDone));
+    CCAction* placenameAct;
+	if(this->inAction) placenameAct=CCSequence::create(stay,out,reset,NULL);
+	else placenameAct=CCSequence::create(in,stay,out,reset,NULL);
+
     CCAction* copyAct=(CCAction*)placenameAct->copy();
     dialogBox->runAction(placenameAct);
     content->runAction(copyAct);
+	this->inAction=true;
 }
 
 void PlacenameWindow::nextMove()
@@ -74,4 +87,9 @@ void PlacenameWindow::respond(int curPlaceID)
 	appear();
 	prevPlaceID=curPlaceID;
     }
+}
+
+void PlacenameWindow::setActionDone()
+{
+	this->inAction=false;
 }

@@ -33,26 +33,23 @@ void Map::removeAllChildrenWithCleanup(bool cleanup)
 void Map::initNPC()
 {
     NPCs=NPCUtil::initNPC();
-    if(NPCs==NULL)
-	CCLog("NPC Loading failed! ");
+    if(NPCs==NULL) CCLog("NPC Loading failed! ");
+	//open a new func if necessary for bloody init
+	if(sGlobal->mapState->isBloody && sGlobal->isNight)
+		this->layerNamed(WATER_MLYR)->setVisible(false);
 }
 
 Map* Map::crossMap(CCPoint tileBirthPoint,int mapNo)
 {
-	if(mapNo==MAP11)
-	{
+	if(mapNo==MAP12) //Arriving to the right piece: MAP12
 		tileBirthPoint=ccp(2+3,tileBirthPoint.y);
-		sGlobal->mapState->mapNo=MAP12;
-		eManager->release();
-		eManager->load(EVENT_MAP11);
-	}
 	else
-	{
 		tileBirthPoint=ccp(this->getMapSize().width-3-3,tileBirthPoint.y);
-		sGlobal->mapState->mapNo=MAP11;
-		eManager->release();
-		eManager->load(EVENT_MAP12);
-	}
+	sGlobal->mapState->mapNo=mapNo;
+	eManager->release();
+	if(!sGlobal->isNight)
+		eManager->load(mapNo-MAP10,TimeUtil::getWeekDay());
+	else eManager->loadNight(mapNo-MAP10);
 	this->setPosition(this->humanPosForTileMove(tileBirthPoint));
 	initNPC();
 	return this;

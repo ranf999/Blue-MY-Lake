@@ -1,5 +1,5 @@
 #include "ButtonA.h"
-#include "Animation.h"//$
+#include "AnimLib.h"//$
 
 //update:2014-9-26 01:59:07
 
@@ -17,14 +17,15 @@ void ButtonA::initSprite()
     buttonImg->setTag(IMGSP);addChild(buttonImg);
 }
 
-void ButtonA::ccTouchesBegan(CCSet* pTouches, CCEvent *pEvent)
+bool ButtonA::ccTouchBegan(CCTouch* pTouch, CCEvent *pEvent)
 {
 	if(hero->isWalking) enable=false;
-    if(!enable)return;
+    if(!enable)return true;
 
     //判断按到按钮木有
-    CCPoint TouchesLocation = getTouchPos(pTouches);
-    if(!(getBoundingBox().containsPoint(TouchesLocation)))return;
+    //CCPoint TouchesLocation = getTouchPos(pTouches);
+	CCPoint touchLocation = pTouch->getLocation();
+    if(!(getBoundingBox().containsPoint(touchLocation)))return true;
 
     //按钮动画响应
     int aa=buttonImg->getContentSize().height;
@@ -34,11 +35,14 @@ void ButtonA::ccTouchesBegan(CCSet* pTouches, CCEvent *pEvent)
     if(controllerListener!=NULL)
     {
 	controllerListener->respond(0);
+	//this->disableDirButton();
 	if(controllerListener->hasTouchEnded())
 	{
 		this->setControllerListener(NULL);
-	    this->enableDirButton();
-		eManager->next();
+	    
+		ControllerListener* lst=eManager->next();
+		if(lst!=NULL) 	this->setControllerListener(lst);
+		else 	this->enableDirButton();
 	}
     }
     //如果没有监听对象
@@ -49,10 +53,10 @@ void ButtonA::ccTouchesBegan(CCSet* pTouches, CCEvent *pEvent)
     //else if(!doShrink)hero->speed=3.0f;//$
     //if(!hero->isHeroWalking&&!doShrink)hero->speed=3.0f;//$
 
-    return;
+    return true;
 }
 
-void ButtonA::ccTouchesEnded(CCSet* pTouches, CCEvent *pEvent)
+void ButtonA::ccTouchEnded(CCTouch* pTouch, CCEvent *pEvent)
 {
     buttonImg->setTextureRect(CCRectMake(0,0,50,50));
     //hero->speed=1.0f;//$
@@ -82,5 +86,9 @@ void ButtonA::trigEvent()
 		-(hero->move/(hero->map->getTileSize().height)).y);
     //@EventManager takes over from here
     ControllerListener* lst=eManager->happen(facingTile,A_TRIG);
-    if(lst!=NULL) this->setControllerListener(lst);
+    if(lst!=NULL) 
+	{
+		this->setControllerListener(lst);
+		this->disableDirButton();
+	}
 }

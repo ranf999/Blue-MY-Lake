@@ -4,7 +4,7 @@
 #include "Entity.h"
 #include "ControllerListener.h"
 #include "AppMacros.h"
-#define PIC_MAX 22
+#define PIC_MAX 110
 using namespace cocos2d;
 
 class HumanEntity : public Entity, public ControllerListener
@@ -21,10 +21,10 @@ public:
 	int dir;
 };
 
-//³õÊ¼»¯id
-//×Ô¶¯initSpriteºÍAnimationºÍAnim
-//goWalking¶¨ÒåÁËNPCµÄÕı³££¨³õÊ¼£©ÔË¶¯×´Ì¬
-//picNo¾ö¶¨ÓÃÄÄÕÅÍ¼
+//åˆå§‹åŒ–id
+//è‡ªåŠ¨initSpriteå’ŒAnimationå’ŒAnim
+//goWalkingå®šä¹‰äº†NPCçš„æ­£å¸¸ï¼ˆåˆå§‹ï¼‰è¿åŠ¨çŠ¶æ€
+//picNoå†³å®šç”¨å“ªå¼ å›¾
 
 
 #endif

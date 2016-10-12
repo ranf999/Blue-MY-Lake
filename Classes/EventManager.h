@@ -9,16 +9,17 @@
 using namespace cocos2d;
 //loads the Events in memory
 //executes the Events for Hero and ButtonA
-
-#define EVENT_CSV_PATH "csv/event%d.csv"
-
 class EventManager
 {
 public:
-    void load(int sTime);
+    void load(int fnmapNo, int weekday);
     ControllerListener* happen(CCPoint coord, int ent);//entrance through hero or buttonA
-	void next();
+	ControllerListener* happen(Event* event);
+	ControllerListener* next();
+	void loadNight(int fnmapNo);
 	int isInstant(Event* event);
+	void redoEvent(int type);
+	void redoAll();
 	void release();
     ~EventManager();
 public:
@@ -26,10 +27,10 @@ public:
     Emap* eStand;
     Emap* eAtrgr;
 	Event* onGoing;
-private:
-    Event* findEventById(int id);
+
+	Event* findEventById(int id);
     ControllerListener* listener(int type);
-    void loadAllEvents(int sTime);
+    void loadAllEvents(CCString* fpath);
     void loadEmap();
     void markHappened(Event* event);
 };

@@ -5,6 +5,7 @@
 #include "PlacenameWindow.h"
 #include "Story.h"
 #include "AppMacros.h"
+#include "ShadowingMan.h"
 
 //respond to call from dirButton
 //provide interface for collision and event dealing for other means of transport
@@ -29,12 +30,16 @@ private:
     void initAction(int dir);
     void letsGo(float dt);
     void stepUp();
+	void followMe();
     void walkEnd();
     CollisionType checkEvent(CCPoint tileCoord);
     void doEvent(CCPoint heroPosition);
+	void crossToMap(int mapNo); 
     cocos2d::CCAction* moveMap;
     cocos2d::CCAction* moveLegs;
     int touchEnded;
     bool focus;
+
+	CCAction* moveHero;
 };
 #endif

@@ -1,40 +1,68 @@
 #include "Welcome.h"
 #include "HelloWorldScene.h"
+#include "LoadingScene.h"
+#include "SMenu.h"
+#include "PMenu.h"
 //update：2014-10-1 15:59:03
+#define READY_TO_WIRTE 0
+#define FIRST_STROKE_DONE 1
+#define SEC_STROKE_DONE 2
 
 USING_NS_CC;
 
-CCScene* Welcome::scene() {
+CCScene* Welcome::scene() 
+{
 	CCScene *scene = CCScene::create();
 	Welcome *layer = Welcome::create();
 	scene->addChild(layer);
 	return scene;
 }
 
-bool Welcome::init() {
+bool Welcome::init() 
+{
 	if (!CCLayer::init()) 
 		return false;
 
 	this->prevTouch=NULL;
 	this->setTouchEnabled(true);
 	this->state=0;
-
-	sGlobal->load();
+	sGlobal->init();
+  
+  // BGM load
+  AudioPlayer::PlayDayBGM();
 
 	initView();
 	return true;
 }
 
-void Welcome::menuStartCallback(CCObject* pSender) {
-	CCEGLView::sharedOpenGLView()->setDesignResolutionSize(MAP_RESOLUWID,MAP_RESOLUHEI, kResolutionExactFit);
-	CCScene *pScene = HelloWorld::scene();
-	CCTransitionFade *scenetrans = CCTransitionFade::create(0.7, pScene);
-	CCDirector::sharedDirector()->replaceScene(scenetrans);
+void Welcome::ccTouchesBegan(CCSet* pTouches, CCEvent* pEvent)
+{
+    CCSetIterator it;
+    CCTouch* touch;
+	for (it = pTouches->begin(); it != pTouches->end(); it++)
+    {
+        touch = (CCTouch*)(*it);
+        if(!touch) break;
+        
+        CCPoint location = touch->getLocationInView();
+        location = CCDirector::sharedDirector()->convertToGL(location);
+		mainbackground->doTouch(location, 512, 12);
+    }
 }
 
-void Welcome::menuClearCallback(CCObject* pSender) {
-	sGlobal->newr();
-	sGlobal->load();
+void Welcome::ccTouchesMoved(CCSet* pTouches, CCEvent* pEvent)
+{
+    CCSetIterator it;
+    CCTouch* touch;
+	for (it = pTouches->begin(); it != pTouches->end(); it++)
+    {
+        touch = (CCTouch*)(*it);
+        if(!touch) break;
+        
+        CCPoint location = touch->getLocationInView();
+        location = CCDirector::sharedDirector()->convertToGL(location);
+		mainbackground->doTouch(location, 512, 12);
+    }
 }
 
 void Welcome::ccTouchesEnded(CCSet* pTouches, CCEvent *pEvent)
@@ -42,19 +70,21 @@ void Welcome::ccTouchesEnded(CCSet* pTouches, CCEvent *pEvent)
 	CCTouch* touch=(CCTouch*)pTouches->anyObject();
 	int xnd=touch->getLocation().x,xnu=touch->getStartLocation().x;
 	int ynd=touch->getLocation().y,ynu=touch->getStartLocation().y;
-	if(state==0)
+	if(state==READY_TO_WIRTE)
 	{
+		//pre condition: prev released
 		bool pie=xnu>xnd&&ynu>ynd&&(xnu-xnd)>((ynu-ynd)/10);
 		if(pie)
 		{
 			state++;
-			CC_SAFE_RELEASE(prevTouch);
 			prevTouch=touch;
 			CC_SAFE_RETAIN(prevTouch);
+			//@display here
 		}
 	}
-	else if(state==1)
+	else if(state==FIRST_STROKE_DONE)
 	{
+		//pre condition: prev retained
 		int xpd=prevTouch->getLocation().x,xpu=prevTouch->getStartLocation().x;
 		int ypd=prevTouch->getLocation().y,ypu=prevTouch->getStartLocation().y;
 		bool shu=ypu>ynu&&ypd<ynd&&xnu>xpu&&xnd>xpd&&abs(xnu-xnd)<((ynu-ynd)/2);
@@ -64,41 +94,79 @@ void Welcome::ccTouchesEnded(CCSet* pTouches, CCEvent *pEvent)
 			prevTouch->release();
 			prevTouch=touch;
 			prevTouch->retain();
+			//@display here
 		}
-		else state=0;
+		else
+		{
+			state=READY_TO_WIRTE;
+			prevTouch->release();
+		}
 	}
-	else if(state==2)
+	else if(state==SEC_STROKE_DONE)
 	{
+		//pre condition: prev retained
 		int xpd=prevTouch->getLocation().x,xpu=prevTouch->getStartLocation().x;
 		int ypd=prevTouch->getLocation().y,ypu=prevTouch->getStartLocation().y;
 		bool shu=ypu<ynu&&ypd>ynd&&xnu>xpu&&xnd>xpd&&abs(xnu-xnd)<((ynu-ynd)/2);
 		if(shu)
 		{
 			sGlobal->superPower->all=true;
-			CCLog("Chuan! ");
+			state++;
 			prevTouch->release();
-			return;
+			//CCLog("Chuan! ");
+			//@display here
 		}
-		state=0;
-		prevTouch->release();
+		else 
+		{
+			state=READY_TO_WIRTE;
+			prevTouch->release();
+		}
 	}
-	sGlobal->superPower->all=false;
+
+	SMenu* menu = (SMenu*)sMenu;
+	if(sMenu->getOpacity()==0)
+		for(int i=0;i<menu->arr->count();i++)
+		{
+			CCNode* item=(CCNode*)menu->arr->objectAtIndex(i);
+			item->setPosition(item->getPosition()-ccp(0,50));
+			CCSequence* seq=CCSequence::create(CCDelayTime::create(i*0.2f),
+				CCSpawn::create(CCFadeIn::create(0.5f), 
+					CCMoveBy::create(0.5f,ccp(0,50)),NULL),
+				NULL);
+			item->runAction(seq);
+		}
+	sMenu->setEnabled(true);
+	sMenu->setOpacity(255);
 }
 
 void Welcome::initView()
 {
-	CCSprite *mainbackground = CCSprite::create(GATE_PATH);
-	mainbackground->setPosition(ccp(CCDirector::sharedDirector()->getVisibleSize().width/2,
-		CCDirector::sharedDirector()->getVisibleSize().height/2));
-	addChild(mainbackground,0);
-	CCMenuItemImage *start = CCMenuItemImage::create(START1_PATH,START2_PATH,
-		this,menu_selector(Welcome::menuStartCallback));
-	CCMenuItemImage *clear = CCMenuItemImage::create(BUTTONB_PATH,BUTTONBD_PATH,
-		this,menu_selector(Welcome::menuClearCallback));
-	start->setPosition(ccp(CCDirector::sharedDirector()->getVisibleSize().width/2,
-		CCDirector::sharedDirector()->getVisibleSize().height/2));
-
-	CCMenu* pMenu = CCMenu::create(start, clear, NULL);
-	pMenu->setPosition(CCPointZero);
-	addChild(pMenu, 2);
+  mainbackground = new ens::CrippleSprite();
+  mainbackground->autorelease();
+  mainbackground->init(GATE_PATH,8);
+  mainbackground->scheduleUpdate();
+  CCSize winSize=CCDirector::sharedDirector()->getWinSize();
+  mainbackground->setPosition(ccp(winSize.width/2,winSize.height/2));
+  addChild(mainbackground,0);
+  
+  sMenu=SMenu::create();
+  pMenu=PMenu::create();
+  sMenu->setPosition(CCPointZero);
+  pMenu->setPosition(CCPointZero);
+  sMenu->setTag(SMENU);
+  pMenu->setTag(PMENU);
+  addChild(sMenu,2);
+  addChild(pMenu,2);
+  
+  pMenu->setVisible(false);
+  pMenu->setEnabled(false);
+  
+  SMenu* menu = (SMenu*)sMenu;
+  sMenu->setOpacity(0);
+  for(int i=0;i<menu->arr->count();i++)
+  {
+    CCMenuItem* item=(CCMenuItem*)menu->arr->objectAtIndex(i);
+    item->setOpacity(0);
+  }
+  sMenu->setEnabled(false);
 }

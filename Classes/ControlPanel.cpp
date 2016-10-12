@@ -1,4 +1,5 @@
 #include "ControlPanel.h"
+#include "InitUtil.h"
 
 //last: 2014-9-26 01:34:13
 //update£º2014-11-17 18:07:12
@@ -15,6 +16,7 @@ ControlPanel* ControlPanel::create(Map* map)
 	panel->setMap(map);
 	panel->initControllerListeners();
 	panel->initControllers();
+	panel->initNightBg();
 	return panel;
 }
 
@@ -23,23 +25,29 @@ void ControlPanel::setMap(Map* map)
 	this->map=map;
 }
 
-void ControlPanel::ccTouchesBegan(CCSet* pTouch, CCEvent *pEvent)
+void ControlPanel::ccTouchesBegan(CCSet* pTouches, CCEvent *pEvent)
 {
 	int distr;
-	dirButton->ccTouchesBegan(pTouch,pEvent);
-	buttonA->ccTouchesBegan(pTouch,pEvent);
+	Menu* menu=(Menu*)this->getChildByTag(MENU);
+	menu->ret(NULL);
+
+	dirButton->ccTouchesBegan(pTouches,pEvent);
+	CCTouch* pTouch=(CCTouch*)pTouches->anyObject();
+	buttonA->ccTouchBegan(pTouch,pEvent);
+
 	distr=buttonA->getDisaDistr();
-	touchScreen->ccTouchesBegan(pTouch,pEvent);
+	touchScreen->ccTouchesBegan(pTouches,pEvent);
 	int time=BUTTONA/DIRBUTTON;
 	dirButton->enable=(((distr%(DIRBUTTON*time))/DIRBUTTON)==0)?true:false;
 	buttonA->enable=((distr%(BUTTONA*time)/BUTTONA)==0)?true:false;
 }
 
-void ControlPanel::ccTouchesEnded(CCSet* pTouch, CCEvent *pEvent)
+void ControlPanel::ccTouchesEnded(CCSet* pTouches, CCEvent *pEvent)
 {
-	dirButton->ccTouchesEnded(pTouch,pEvent);
-	buttonA->ccTouchesEnded(pTouch,pEvent);
-	touchScreen->ccTouchesEnded(pTouch,pEvent);
+	dirButton->ccTouchesEnded(pTouches,pEvent);
+	CCTouch* pTouch=(CCTouch*)pTouches->anyObject();
+	buttonA->ccTouchEnded(pTouch,pEvent);
+	touchScreen->ccTouchesEnded(pTouches,pEvent);
 }
 
 void ControlPanel::ccTouchesMoved(CCSet* pTouch, CCEvent *pEvent)
@@ -63,7 +71,7 @@ void ControlPanel::initControllerListeners()
 	rwindow->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width/2,
 		CCDirector::sharedDirector()->getWinSize().height/2));
 	rGlobal->rwindow=rwindow;
-	this->addChild(rwindow,11);
+	this->addChild(rwindow,WIN_ON_PANEL_ZOR);
 
 	//bigwindow=BigWindow::create();
 	//this->setTag(BIGWINDOW);this->addChild(bigwindow,11);
@@ -71,7 +79,7 @@ void ControlPanel::initControllerListeners()
 
 	diawindow=DiaWindow::create();
 	rGlobal->diawindow=diawindow;
-	this->setTag(DIAWINDOW);this->addChild(diawindow,11);
+	this->setTag(DIAWINDOW);this->addChild(diawindow,WIN_ON_PANEL_ZOR);
 }
 
 void ControlPanel::initControllers()
@@ -80,20 +88,39 @@ void ControlPanel::initControllers()
 	dirButton->setPosition(ccp(dirButton->buttonImg->getContentSize().width/2,
 		dirButton->buttonImg->getContentSize().height/2));
 	dirButton->setControllerListener(hero);
-	dirButton->setTag(DIRBUTTON);this->addChild(dirButton);
+	dirButton->setTag(DIRBUTTON);this->addChild(dirButton,BTN_ON_PANEL_ZOR);
 
 	this->buttonA=ButtonA::create();
 	buttonA->setPosition(ccp(CCDirector::sharedDirector()->getWinSize().width-
 		buttonA->buttonImg->getContentSize().width,
-		buttonA->buttonImg->getContentSize().height));
+		buttonA->buttonImg->getContentSize().height*2));
 	buttonA->setPointers(hero,diawindow,bigwindow);
-	buttonA->setTag(BUTTONA);this->addChild(buttonA);
+	buttonA->setTag(BUTTONA);this->addChild(buttonA,BTN_ON_PANEL_ZOR);
 
 	this->touchScreen=TouchScreen::create();
 	touchScreen->setPointers(hero,buttonA,dirButton);
-	touchScreen->setTag(TOUCHSCREEN);this->addChild(touchScreen);
+	touchScreen->setTag(TOUCHSCREEN);
+	this->addChild(touchScreen,BTN_ON_PANEL_ZOR);
 
 	Menu* menu=Menu::create();
 	menu->setHero(hero);
-	this->addChild(menu);
+	menu->setTag(MENU);
+	this->addChild(menu,BTN_ON_PANEL_ZOR);
+}
+
+void ControlPanel::initNightBg()
+{
+	//the Night is Dark
+	CCSprite* nightBg = CCSprite::create(NIGHTBG_IMG_PATH);
+	rGlobal->nightBg = nightBg;
+	nightBg->setPosition(ccp(nightBg->getContentSize().width / 2, nightBg->getContentSize().height / 2));
+	nightBg->setOpacity(0);
+	this->addChild(nightBg,NIGHT_ON_PANEL_ZOR);
+
+	CCSprite* murkBg = CCSprite::create(MURKBG_IMG_PATH);
+	rGlobal->murkBg = murkBg;
+	murkBg->setPosition(ccp(murkBg->getContentSize().width / 2, murkBg->getContentSize().height / 2));
+	this->addChild(murkBg,MURK_ON_PANEL_ZOR);
+
+	InitUtil::initiate();
 }

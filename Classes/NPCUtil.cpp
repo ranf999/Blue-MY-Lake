@@ -10,16 +10,17 @@ CCArray* NPCUtil::initNPC()
 	{
 		Event* event=(Event*)eManager->events->objectAtIndex(i);
 		CCArray* args=event->args;
-		if(event->imgNo>=0)
+		if(event->imgNo>=0 && event->type==TALKMAN_EVT)
 		{
 			int cat=event->category;
 			int arg0;
-			HumanEntity* man;
-			CCInteger* intg=(CCInteger*)args->objectAtIndex(INDEX_ZERO);
+			HumanEntity* man=NULL; CCInteger* intg=NULL;
+			if(args->count()!=0) intg = (CCInteger*)args->objectAtIndex(INDEX_ZERO);
 			switch(cat)
 			{
 			case STANDING:
-				arg0=intg->getValue();//arg0=faceDir
+				if(intg!=NULL) arg0=intg->getValue();//arg0=faceDir
+				else arg0=Down;
 				man=StandingMan::create(event->imgNo,event->id);
 				man->setFaceDirection(arg0);
 				man->dir=arg0;
@@ -38,10 +39,12 @@ CCArray* NPCUtil::initNPC()
 				    man=theMan;
 				}
 				break;
-			default:break;
+			default:
+				CCLog("Unrecognized Talking Man category: %d of event Id: %d", cat, event->id);
+				break;
 			}
 			man->setTag(MAN_START+event->id);
-			rGlobal->map->addChild(man,4);
+			rGlobal->map->addChild(man,NPC_ON_MAP_BACK_ZOR);
 			NPCs->addObject(man);
 		}
 	}

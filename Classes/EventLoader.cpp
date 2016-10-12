@@ -1,6 +1,17 @@
 #include "EventLoader.h"
 #include "TalkManEvent.h"
 #include "GetSuPEvent.h"
+#include "DiaEvent.h"
+#include "GetShdwEvent.h"
+#include "ReloadEvent.h"
+#include "BloodyEvent.h"
+#include "DuelEvent.h"
+#include "LoadNightEvent.h"
+#include "LoadDayEvent.h"
+#include "IsWinEvent.h"
+#include "HeroDisapEvent.h"
+#include "HeroAppearEvent.h"
+#include "NPCMoveEvent.h"
 
 CCArray* EventLoader::start(const char* sFilePath)
 {
@@ -21,23 +32,33 @@ CCArray* EventLoader::start(const char* sFilePath)
 				event=TalkManEvent::create(); break;
 			case GET_SUP_EVT:
 				event=GetSuPEvent::create(); break;
-				/*case ITEM_EVT:
-				  event=ItemEvent::create(); break;
-				  case COMBAT_EVT:
-				  event=CombatEvent::create(); break;
-				  case RESTORATION_EVT:
-				  event=RestorationEvent::create(); break;
-				  case BLOODY_EVT:
-				  event=BloodyEvent::create(); break;
-				  case SCENECH_EVT:
-				  event=SceneChEvent::create(); break;
-				  case NIGHTFALL_EVT:
-				  event=NightfallEvent::create(); break;
-				  case TIMEELAPSE:
-				  event=TimeElapseEvent::create(); break;*/
+			case DIALOG_EVT:
+				event=DiaEvent::create(); break;
+			case SHADOW_EVT:
+				event=GetShdwEvent::create(); break;
+			case RELOAD_EVT:
+				event=ReloadEvent::create(); break;
+			case BLOODY_EVT:
+				event=BloodyEvent::create(); break;
+			case WATERY_EVT:
+				event=WateryEvent::create(); break;
+			case DUEL_EVT:
+				event=DuelEvent::create(); break;
+			case LNIGHT_EVT:
+				event=LoadNightEvent::create(); break;
+			case LDAY_EVT:
+				event=LoadDayEvent::create(); break;
+			case IS_WIN_EVT:
+				event=IsWinEvent::create(); break;
+			case HERO_DIS_EVT:
+				event=HeroDisapEvent::create(); break;
+			case HERO_APP_EVT:
+				event=HeroAppearEvent::create(); break;
+			case NPC_MOVE_EVT:
+				event=NPCMoveEvent::create(); break;
 			default:break;
 		}
-		CCLog("%s",typeid(*event).name());
+		//CCLog("%s",typeid(*event).name());
 
 		CCPoint point=ccp(0,0);
 		strTmp=(CCString*)attList->objectAtIndex(j++);
@@ -93,6 +114,5 @@ CCArray* EventLoader::start(const char* sFilePath)
 		}
 		eventSet->addObject(event);
 	}
-	eventSet->retain();
 	return eventSet;
 }
